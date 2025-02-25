@@ -13,7 +13,7 @@ class Config():
         self.task = ['DIS5K', 'COD', 'HRSOD', 'General', 'General-2K', 'Matting'][0]
         self.testsets = {
             # Benchmarks
-            'DIS5K': ','.join(['DIS-VD', 'DIS-TE1', 'DIS-TE2', 'DIS-TE3', 'DIS-TE4'][:1]),
+            'DIS5K': ','.join(['DIS-VD', 'DIS-TE1', 'DIS-TE2', 'DIS-TE3', 'DIS-TE4'][:3]),
             'COD': ','.join(['CHAMELEON', 'NC4K', 'TE-CAMO', 'TE-COD10K']),
             'HRSOD': ','.join(['DAVIS-S', 'TE-HRSOD', 'TE-UHRSD', 'DUT-OMRON', 'TE-DUTS']),
             # Practical use
@@ -23,7 +23,7 @@ class Config():
         }[self.task]
         datasets_all = '+'.join([ds for ds in (os.listdir(os.path.join(self.data_root_dir, self.task)) if os.path.isdir(os.path.join(self.data_root_dir, self.task)) else []) if ds not in self.testsets.split(',')])
         self.training_set = {
-            'DIS5K': ['DIS-TR', 'DIS-TR+DIS-TE1+DIS-TE2+DIS-TE3+DIS-TE4'][0],
+            'DIS5K': ['DIS-TR', 'DIS-TR+DIS-TE3+DIS-TE4'][1],
             'COD': 'TR-COD10K+TR-CAMO',
             'HRSOD': ['TR-DUTS', 'TR-HRSOD', 'TR-UHRSD', 'TR-DUTS+TR-HRSOD', 'TR-DUTS+TR-UHRSD', 'TR-HRSOD+TR-UHRSD', 'TR-DUTS+TR-HRSOD+TR-UHRSD'][5],
             'General': datasets_all,
@@ -34,7 +34,7 @@ class Config():
 
         # Faster-Training settings
         self.load_all = False   # Turn it on/off by your case. It may consume a lot of CPU memory. And for multi-GPU (N), it would cost N times the CPU memory to load the data.
-        self.compile = True                             # 1. Trigger CPU memory leak in some extend, which is an inherent problem of PyTorch.
+        self.compile = False                             # 1. Trigger CPU memory leak in some extend, which is an inherent problem of PyTorch.
                                                         #   Machines with > 70GB CPU memory can run the whole training on DIS5K with default setting.
                                                         # 2. Higher PyTorch version may fix it: https://github.com/pytorch/pytorch/issues/119607.
                                                         # 3. But compile in Pytorch > 2.0.1 seems to bring no acceleration for training.
@@ -94,7 +94,7 @@ class Config():
         self.progressive_ref = self.refine and True
         self.ender = self.progressive_ref and False
         self.scale = self.progressive_ref and 2
-        self.auxiliary_classification = False       # Only for DIS5K, where class labels are saved in `dataset.py`.
+        self.auxiliary_classification = True       # Only for DIS5K, where class labels are saved in `dataset.py`.
         self.refine_iteration = 1
         self.freeze_bb = False
         self.model = [
@@ -103,7 +103,7 @@ class Config():
         ][0]
 
         # TRAINING settings - inactive
-        self.preproc_methods = ['flip', 'enhance', 'rotate', 'pepper', 'crop'][:4]
+        self.preproc_methods = ['flip', 'enhance', 'rotate', 'pepper', 'crop']
         self.optimizer = ['Adam', 'AdamW'][1]
         self.lr_decay_epochs = [1e5]    # Set to negative N to decay the lr in the last N-th epoch.
         self.lr_decay_rate = 0.5
@@ -150,7 +150,7 @@ class Config():
                 'structure': 5 * 0,    # structure loss from codes of MVANet. A little improvement on DIS-TE[1,2,3], a bit more decrease on DIS-TE4.
             }
         self.lambdas_cls = {
-            'ce': 5.0
+            'ce': 2.0
         }
 
         # PATH settings - inactive
