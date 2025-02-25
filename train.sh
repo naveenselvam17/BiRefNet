@@ -4,7 +4,7 @@
 method="$1"
 task=$(python3 config.py --print_task)
 case "${task}" in
-    'DIS5K') epochs=500 && val_last=500 && step=10 ;;
+    'DIS5K') epochs=900 && val_last=500 && step=10 ;;
     'COD') epochs=150 && val_last=50 && step=5 ;;
     'HRSOD') epochs=150 && val_last=50 && step=5 ;;
     'General') epochs=150 && val_last=50 && step=5 ;;
@@ -27,8 +27,7 @@ then
     torchrun --standalone --nproc_per_node $((nproc_per_node+1)) \
     train.py --ckpt_dir ckpt/${method} --epochs ${epochs} \
         --dist ${to_be_distributed} \
-        --resume xx/xx-epoch_244.pth \
-        --use_accelerate
+        --resume pretrained_models/BiRefNet-DIS-epoch_590.pth
 else
     echo "Single-GPU mode received..."
     CUDA_VISIBLE_DEVICES=${devices} \

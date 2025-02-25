@@ -16,8 +16,8 @@ testsets=$(python3 config.py --print_testsets)
 testsets=(`echo ${testsets} | tr ',' ' '`) && testsets=${testsets[@]}
 
 for testset in ${testsets}; do
-    # python eval_existingOnes.py --pred_root ${pred_root} --data_lst ${testset} > ${log_dir}/eval_${testset}.out
-    nohup python eval_existingOnes.py --pred_root ${pred_root} --data_lst ${testset} > ${log_dir}/eval_${testset}.out 2>&1 &
+    python eval_existingOnes.py --pred_root ${pred_root} --data_lst ${testset} > ${log_dir}/eval_${testset}.out
+    # nohup python eval_existingOnes.py --pred_root ${pred_root} --data_lst ${testset} > ${log_dir}/eval_${testset}.out 2>&1 &
 done
 
 

@@ -6,7 +6,7 @@ class Config():
     def __init__(self) -> None:
         # PATH settings
         # Make up your file system as: SYS_HOME_DIR/codes/dis/BiRefNet, SYS_HOME_DIR/datasets/dis/xx, SYS_HOME_DIR/weights/xx
-        self.sys_home_dir = [os.path.expanduser('~'), '/mnt/data'][0]   # Default, custom
+        self.sys_home_dir = [os.path.expanduser('~'), '/home/naveenselvam1715/projects/forked_projects/BiRefNet'][1]   # Default, custom
         self.data_root_dir = os.path.join(self.sys_home_dir, 'datasets/dis')
 
         # TASK settings
@@ -52,7 +52,7 @@ class Config():
         self.dec_blk = ['BasicDecBlk', 'ResBlk'][0]
 
         # TRAINING settings
-        self.batch_size = 4
+        self.batch_size = 2
         self.finetune_last_epochs = [
             0,
             {
@@ -94,7 +94,7 @@ class Config():
         self.progressive_ref = self.refine and True
         self.ender = self.progressive_ref and False
         self.scale = self.progressive_ref and 2
-        self.auxiliary_classification = True       # Only for DIS5K, where class labels are saved in `dataset.py`.
+        self.auxiliary_classification = False       # Only for DIS5K, where class labels are saved in `dataset.py`.
         self.refine_iteration = 1
         self.freeze_bb = False
         self.model = [
